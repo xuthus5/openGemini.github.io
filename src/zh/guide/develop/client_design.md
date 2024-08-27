@@ -67,8 +67,8 @@ classDiagram
         + void CreateRetentionPolicy(String database, RpConfig rpConfig, bool isDefault)
         + RetentionPolicy[] ShowRetentionPolicies(String database)
         + void DropRetentionPolicy(String database, String retentionPolicy)
-        + RetentionPolicy[] ShowRetentionPolicies(String database)
-        + String[] ShowMeasurements(String database, String retentionPolicy)
+        + void CreateMeasurement(CreateMeasurementBuilder builder)
+        + String[] ShowMeasurements(ShowMeasurementBuilder builder)
         + void DropMeasurement(String database, String retentionPolicy, String measurement)
     }
     class RpConfig {
@@ -76,6 +76,38 @@ classDiagram
         + String Duration
         + String ShardGroupDuration
         + String IndexDuration
+    }
+    class CreateMeasurementBuilder {
+        + CreateMeasurementBuilder Tags(String[] tags)
+        + CreateMeasurementBuilder FieldMap(map[String]FieldType fields)
+        + CreateMeasurementBuilder ShardType(ShardType shardType)
+        + CreateMeasurementBuilder ShardKeys(String[] shardKeys)
+        + CreateMeasurementBuilder FullTextIndex()
+        + CreateMeasurementBuilder IndexList(String[] indexes)
+        + CreateMeasurementBuilder EngineType(EngineType engineType)
+        + CreateMeasurementBuilder PrimaryKey(String[] primaryKeys)
+        + CreateMeasurementBuilder SortKeys(String[] sortKeys)
+        + String build()
+    }
+    class ShowMeasurementBuilder {
+        + ShowMeasurementBuilder Filter(ComparisonOperator operator, String regex)
+        + String build()
+    }
+    class FieldType {
+        <<enum>>
+        FieldTypeInt64  // INT64
+        FieldTypeFloat64 // FLOAT64
+        FieldTypeString // STRING
+        FieldTypeBool  // BOOL
+    }
+    class ShardType {
+        <<enum>>
+        ShardTypeHash // HASH
+        ShardTypeRange // RANGE
+    }
+    class EngineType {
+        <<enum>>
+        EngineTypeColumnStore // columnstore
     }
 ```
 
