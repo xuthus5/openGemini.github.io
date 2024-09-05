@@ -75,10 +75,42 @@ classDiagram
         + String[] ShowSeries(ShowSeriesBuilder builder)
     }
     class RpConfig {
-        + String Name
-        + String Duration
-        + String ShardGroupDuration
-        + String IndexDuration
+        + String Name // non-null
+        + String Duration // non-null
+        + String ShardGroupDuration // nullable
+        + String IndexDuration // nullable
+    }
+    class CreateMeasurementBuilder {
+        + CreateMeasurementBuilder Tags(String[] tags)
+        + CreateMeasurementBuilder FieldMap(map[String]FieldType fields)
+        + CreateMeasurementBuilder ShardType(ShardType shardType)
+        + CreateMeasurementBuilder ShardKeys(String[] shardKeys)
+        + CreateMeasurementBuilder FullTextIndex()
+        + CreateMeasurementBuilder IndexList(String[] indexes)
+        + CreateMeasurementBuilder EngineType(EngineType engineType)
+        + CreateMeasurementBuilder PrimaryKey(String[] primaryKeys)
+        + CreateMeasurementBuilder SortKeys(String[] sortKeys)
+        + String build()
+    }
+    class ShowMeasurementBuilder {
+        + ShowMeasurementBuilder Filter(ComparisonOperator operator, String regex)
+        + String build()
+    }
+    class FieldType {
+        <<enum>>
+        Bool  // BOOL
+        Int64  // INT64
+        Float64 // FLOAT64
+        String // STRING
+    }
+    class ShardType {
+        <<enum>>
+        Hash // HASH
+        Range // RANGE
+    }
+    class EngineType {
+        <<enum>>
+        ColumnStore // columnstore
     }
     class CreateMeasurementBuilder {
         + CreateMeasurementBuilder Tags(String[] tags)
@@ -235,6 +267,11 @@ classDiagram
         - FunctionEnum function
         - Expression[] arguments
     }
+    
+    class AsExpression {
+        - String alias
+        - Expression expression
+    }
 
     class ArithmeticExpression {
         - Expression Left
@@ -293,6 +330,7 @@ classDiagram
     Expression <|-- StarExpression
     Expression <|-- ConstantExpression
     Expression <|-- FunctionExpression
+    Expression <|-- AsExpression
     Expression <|-- ArithmeticExpression
     FunctionExpression --> FunctionEnum
     Condition <|-- ComparisonCondition
